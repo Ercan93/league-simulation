@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LeagueFixturesComponent } from './league-fixtures/league-fixtures.component';
+import { LeagueTableComponent } from './league-table/league-table.component';
 
 
 
 @NgModule({
   declarations: [
-    LeagueFixturesComponent
+    LeagueFixturesComponent,
+    LeagueTableComponent
   ],
   imports: [
     CommonModule
