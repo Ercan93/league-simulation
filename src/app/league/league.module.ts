@@ -14,6 +14,11 @@ import { LeagueResultsComponent } from './league-results/league-results.componen
   ],
   imports: [
     CommonModule
+  ],
+  exports: [
+    LeagueFixturesComponent,
+    LeagueTableComponent,
+    LeagueResultsComponent
   ]
 })
 export class LeagueModule { }
