@@ -1,5 +1,5 @@
 export interface MatchFixture {
-  matchweek: string;
+  matchweek: number;
   homeTeam: string;
   opponentTeam: string;
   isHomeMatch: boolean;
