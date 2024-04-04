@@ -19,7 +19,7 @@ export interface GoalStats {
 
 export interface ClubStats {
   leaguePosition: number;
-  totalPoints: number;
+  totalPoint: number;
   performance: TeamPerformance;
   goals: GoalStats;
   totalMatchesPlayed: number;
