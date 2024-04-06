@@ -7,16 +7,9 @@ import { LeagueModule } from './league/league.module';
 import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    LeagueModule
-  ],
+  declarations: [AppComponent, HomeComponent],
+  imports: [BrowserModule, AppRoutingModule, LeagueModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
