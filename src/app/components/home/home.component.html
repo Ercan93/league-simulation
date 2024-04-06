@@ -1,2 +1,14 @@
-<app-league-table></app-league-table>
-<app-league-fixtures></app-league-fixtures>
+<div class="container">
+  <p-tabView>
+    <p-tabPanel header="Table">
+      <app-league-table></app-league-table>
+    </p-tabPanel>
+    <p-tabPanel header="Matchweek">
+      <app-league-actions></app-league-actions>
+    </p-tabPanel>
+    <p-tabPanel header="Fixtures">
+      <app-league-fixtures></app-league-fixtures>
+    </p-tabPanel>
+  </p-tabView>
+  <app-league-actions></app-league-actions>
+</div>
