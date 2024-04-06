@@ -10,10 +10,10 @@ import { Component } from '@angular/core';
 export class LeagueTableComponent {
   clubs: Club[] = [];
 
-  constructor(private LeagueService: LeagueService) {}
+  constructor(private leagueService: LeagueService) {}
 
   ngOnInit(): void {
-    this.LeagueService.season$.subscribe((season) => {
+    this.leagueService.season$.subscribe((season) => {
       this.clubs = season.clubs;
     });
   }
