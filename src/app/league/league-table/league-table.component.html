@@ -1,1 +1,45 @@
-<p>league-table works!</p>
+<div class="container">
+  <div class="row mt-3">
+    <div class="col-12">
+      <h1 class="text-start">League Table</h1>
+    </div>
+  </div>
+  <div class="row">
+    <p-table
+      [value]="clubs"
+      styleClass="p-datatable-gridlines"
+      [tableStyle]="{ 'min-width': '50rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th></th>
+          <th>Club</th>
+          <th>Abbr</th>
+          <th>Played</th>
+          <th>Wins</th>
+          <th>Draws</th>
+          <th>Losses</th>
+          <th>Goals Scored</th>
+          <th>Goals Conceded</th>
+          <th>Goal Difference</th>
+          <th>Points</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-team>
+        <tr>
+          <td>{{ team.clubStats.leaguePosition }}</td>
+          <td>{{ team.clubName }}</td>
+          <td>{{ team.abbr }}</td>
+          <td>{{ team.clubStats.totalMatchesPlayed }}</td>
+          <td>{{ team.clubStats.matchOutcome.winCount }}</td>
+          <td>{{ team.clubStats.matchOutcome.drawCount }}</td>
+          <td>{{ team.clubStats.matchOutcome.lossCount }}</td>
+          <td>{{ team.clubStats.goals.goalsScored }}</td>
+          <td>{{ team.clubStats.goals.goalsConceded }}</td>
+          <td>{{ team.clubStats.goals.goalDifference }}</td>
+          <td>{{ team.clubStats.totalPoint }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
