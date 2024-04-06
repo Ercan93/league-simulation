@@ -1,6 +1,5 @@
-import { MatchFixture } from './matchFixture';
-import { MatchRecord } from './matchRecord';
 import { ClubStats } from './clubStats';
+import { MatchFixture } from './matchFixture';
 
 export interface Club {
   id: number;
@@ -9,11 +8,7 @@ export interface Club {
   leagueName: string;
   abbr: string;
   clubStats: ClubStats;
-  matchRecords: {
-    homeRecord: MatchRecord;
-    awayRecord: MatchRecord;
-  };
-  matchFixtures?: {
+  fixtures?: {
     pastMatches: MatchFixture[];
     futureMatches: MatchFixture[];
     mostRecentMatch: MatchFixture;

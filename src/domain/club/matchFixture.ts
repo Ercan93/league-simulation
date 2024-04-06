@@ -1,7 +1,7 @@
 export interface MatchFixture {
   matchweek: number;
   homeTeam: string;
-  opponentTeam: string;
+  awayTeam: string;
   homeTeamScore?: number;
   awayTeamScore?: number;
 }
