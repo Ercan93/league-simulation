@@ -10,7 +10,13 @@
     <div class="col-12 lg:col-4">
       <app-fixture-card
         [fixture]="week"
-        [legend]="'Matchweek ' + ($index + 1)"
+        [legend]="
+          $index === 0
+            ? 'Last Matchweek'
+            : $index === 1
+            ? 'Current Matchweek'
+            : 'Next Matchweek'
+        "
       ></app-fixture-card>
     </div>
     } } @empty {
