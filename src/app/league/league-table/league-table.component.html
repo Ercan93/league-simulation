@@ -15,9 +15,9 @@
           <th class="w-3rem"></th>
           <th></th>
           <th class="w-7rem">Played</th>
-          <th class="w-7rem">Wins</th>
-          <th class="w-7rem">Draws</th>
-          <th class="w-7rem">Losses</th>
+          <th class="w-7rem bg-gray-100">Won</th>
+          <th class="w-7rem">Drawn</th>
+          <th class="w-7rem">Lost</th>
           <th class="w-7rem">Goals Scored</th>
           <th class="w-7rem">Goals Conceded</th>
           <th class="w-7rem">Goal Difference</th>
@@ -30,14 +30,32 @@
             'bg-gray-50': team.clubStats.leaguePosition % 2 === 0,
             'bg-white': team.clubStats.leaguePosition % 2 !== 0,
           }"
-          class="font-semibold text-xl"
+          class="font-semibold text-xl custom-primary-text-color"
         >
           <td>{{ team.clubStats.leaguePosition }}</td>
           <td>{{ team.clubName }}</td>
           <td>{{ team.clubStats.totalMatchesPlayed }}</td>
-          <td>{{ team.clubStats.matchOutcome.winCount }}</td>
-          <td>{{ team.clubStats.matchOutcome.drawCount }}</td>
-          <td>{{ team.clubStats.matchOutcome.lossCount }}</td>
+          <td>
+            <p-badge
+              [value]="team.clubStats.matchOutcome.winCount"
+              size="large"
+              severity="success"
+            ></p-badge>
+          </td>
+          <td>
+            <p-badge
+              [value]="team.clubStats.matchOutcome.drawCount"
+              size="large"
+              severity="info"
+            ></p-badge>
+          </td>
+          <td>
+            <p-badge
+              [value]="team.clubStats.matchOutcome.lossCount"
+              size="large"
+              severity="danger"
+            ></p-badge>
+          </td>
           <td>{{ team.clubStats.goals.goalsScored }}</td>
           <td>{{ team.clubStats.goals.goalsConceded }}</td>
           <td>{{ team.clubStats.goals.goalDifference }}</td>
