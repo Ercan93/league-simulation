@@ -412,7 +412,7 @@ export class LeagueService {
       fixtures.forEach((fixture) => {
         this.simulateMatch(fixture);
       });
-      this.setMatchWeek(week + 1);
+      if (week <= totalWeeks) this.setMatchWeek(week + 1);
     }
   }
 
@@ -428,7 +428,7 @@ export class LeagueService {
     }
   }
 
-  resetSeason(): void {
+  createNewSeason(): void {
     this.setSeason({
       id: 0,
       seasonName: '',
