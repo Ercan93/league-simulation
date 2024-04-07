@@ -79,8 +79,19 @@ export class LeagueService {
   private matchFixturesSubject = new BehaviorSubject<MatchFixture[]>([]);
   matchFixtures$ = this.matchFixturesSubject.asObservable();
 
+  private matchWeekSubject = new BehaviorSubject<number>(1);
+  matchWeek$ = this.matchWeekSubject.asObservable();
+
   setSeason(season: Season): void {
     this.seasonSubject.next(season);
+  }
+
+  setMatchFixtures(matchFixtures: MatchFixture[]): void {
+    this.matchFixturesSubject.next(matchFixtures);
+  }
+
+  setMatchWeek(week: number): void {
+    this.matchWeekSubject.next(week);
   }
 
   setClubs(clubs: Club[]): void {
@@ -102,13 +113,6 @@ export class LeagueService {
         observer.next(season.clubs);
         observer.complete();
       }
-    });
-  }
-
-  getTeams(): Observable<any[]> {
-    return new Observable((observer) => {
-      observer.next(TEAMS);
-      observer.complete();
     });
   }
 
@@ -199,6 +203,7 @@ export class LeagueService {
       clubs,
     };
     this.setSeason(season);
+    this.setMatchFixtures(matchFixtures);
   }
 
   generateSeasonFixtures(clubs: Club[]): MatchFixture[] {
@@ -242,5 +247,148 @@ export class LeagueService {
     }
 
     return seasonMatchFixtures;
+  }
+
+  generateGoals(attackRating: number): number {
+    return Math.floor(Math.random() * attackRating);
+  }
+
+  updatePostions(): void {
+    const clubs = this.seasonSubject.value?.clubs;
+    if (clubs) {
+      clubs.sort((a, b) => {
+        if (a.clubStats.totalPoint < b.clubStats.totalPoint) {
+          return 1;
+        } else if (a.clubStats.totalPoint > b.clubStats.totalPoint) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+
+      clubs.forEach((club, index) => {
+        club.clubStats.leaguePosition = index + 1;
+      });
+
+      this.setClubs(clubs);
+    }
+  }
+
+  updateMatchFixture(fixture: MatchFixture): void {
+    const matchFixtures = this.seasonSubject.value?.matchFixtures;
+    if (matchFixtures) {
+      const index = matchFixtures.findIndex(
+        (f) =>
+          f.homeTeam === fixture.homeTeam &&
+          f.awayTeam === fixture.awayTeam &&
+          f.matchweek === fixture.matchweek
+      );
+      matchFixtures[index] = fixture;
+      this.matchFixturesSubject.next(matchFixtures);
+    }
+  }
+
+  updateClubStat(
+    homeClub: Club,
+    awayClub: Club,
+    homeGoals: number,
+    awayGoals: number
+  ): void {
+    const week = this.matchWeekSubject.value;
+    this.updateMatchStats(homeClub, homeGoals, awayGoals);
+    this.updateMatchStats(awayClub, awayGoals, homeGoals);
+
+    this.updateMatchOutcome(homeClub, homeGoals, awayGoals);
+    this.updateMatchOutcome(awayClub, awayGoals, homeGoals);
+
+    this.updateClubStats(homeClub);
+    this.updateClubStats(awayClub);
+    this.updatePostions();
+    this.updateMatchFixture({
+      homeTeam: homeClub.clubName,
+      awayTeam: awayClub.clubName,
+      matchweek: week,
+      homeTeamScore: homeGoals,
+      awayTeamScore: awayGoals,
+    });
+  }
+
+  updateMatchStats(
+    club: Club,
+    goalsScored: number,
+    goalsConceded: number
+  ): void {
+    club.clubStats.totalMatchesPlayed++;
+    club.clubStats.goals.goalsScored += goalsScored;
+    club.clubStats.goals.goalsConceded += goalsConceded;
+    club.clubStats.goals.goalDifference =
+      club.clubStats.goals.goalsScored - club.clubStats.goals.goalsConceded;
+  }
+
+  updateMatchOutcome(
+    club: Club,
+    goalsScored: number,
+    goalsConceded: number
+  ): void {
+    if (goalsScored > goalsConceded) {
+      club.clubStats.totalPoint += 3;
+      club.clubStats.matchOutcome.winCount++;
+    } else if (goalsScored < goalsConceded) {
+      club.clubStats.matchOutcome.lossCount++;
+    } else {
+      club.clubStats.totalPoint += 1;
+      club.clubStats.matchOutcome.drawCount++;
+    }
+  }
+
+  simulateMatch(fixture: MatchFixture): void {
+    const homeTeam = fixture.homeTeam;
+    const awayTeam = fixture.awayTeam;
+
+    const homeClub = this.seasonSubject.value?.clubs.find(
+      (c) => c.clubName === homeTeam
+    );
+    const awayClub = this.seasonSubject.value?.clubs.find(
+      (c) => c.clubName === awayTeam
+    );
+
+    if (homeClub && awayClub) {
+      const homeGoals = this.generateGoals(
+        homeClub.clubStats.performance.overallRating
+      );
+      const awayGoals = this.generateGoals(
+        awayClub.clubStats.performance.overallRating
+      );
+
+      this.updateClubStat(homeClub, awayClub, homeGoals, awayGoals);
+    }
+  }
+
+  simulateWeek(): void {
+    const week = this.matchWeekSubject.value;
+    const matchFixtures = this.seasonSubject.value?.matchFixtures;
+    const totalWeeks = matchFixtures.length / 3;
+
+    if (week > totalWeeks) return;
+
+    if (matchFixtures) {
+      const fixtures = matchFixtures.filter((f) => f.matchweek === week);
+      fixtures.forEach((fixture) => {
+        this.simulateMatch(fixture);
+      });
+      this.setMatchWeek(week + 1);
+    }
+  }
+
+  simulateSeason(): void {
+    const week = this.matchWeekSubject.value;
+    const matchFixtures = this.seasonSubject.value?.matchFixtures;
+    const totalWeeks = matchFixtures.length / 3;
+
+    if (week > totalWeeks) return;
+
+    for (let i = week; i <= totalWeeks; i++) {
+      this.simulateWeek();
+    }
   }
 }
