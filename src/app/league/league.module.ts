@@ -8,6 +8,8 @@ import { LeagueActionsComponent } from './league-actions/league-actions.componen
 import { TableModule } from 'primeng/table';
 import { FieldsetModule } from 'primeng/fieldset';
 import { ButtonModule } from 'primeng/button';
+import { BadgeModule } from 'primeng/badge';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { ButtonModule } from 'primeng/button';
     TableModule,
     FieldsetModule,
     ButtonModule,
+    BadgeModule,
+    ProgressBarModule,
     BrowserAnimationsModule,
   ],
   exports: [
