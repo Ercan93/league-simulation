@@ -106,6 +106,10 @@ export class LeagueService {
     return this.season$;
   }
 
+  getMatchWeek(): Observable<number> {
+    return this.matchWeek$;
+  }
+
   getClubs(): Observable<Club[]> {
     return new Observable((observer) => {
       const season = this.seasonSubject.value;
@@ -137,7 +141,9 @@ export class LeagueService {
   }
 
   createClubs(leagueName: string): void {
-    const clubs: Club[] = TEAMS.map((team, index) => {
+    const teams = TEAMS.sort(() => Math.random() - 0.5);
+
+    const clubs: Club[] = teams.map((team, index) => {
       return {
         id: index + 1,
         clubName: team.name,
@@ -249,8 +255,29 @@ export class LeagueService {
     return seasonMatchFixtures;
   }
 
-  generateGoals(attackRating: number): number {
-    return Math.floor(Math.random() * attackRating);
+  generateGoals({
+    def,
+    mdi,
+    att,
+    ovr,
+  }: {
+    def: number;
+    mdi: number;
+    att: number;
+    ovr: number;
+  }): number {
+    const formule = def * 0.2 + mdi * 0.3 + att * 0.3 + ovr * 0.2;
+    let goals = Math.floor(Math.random() * formule);
+    const modValue = Math.floor(Math.random() * att);
+    goals = modValue === 0 ? goals % 8 : goals % modValue;
+
+    if (goals < 0) {
+      goals = 0;
+    } else if (goals > 6) {
+      goals = Math.floor(Math.random() * 6);
+    }
+
+    return goals;
   }
 
   updatePostions(): void {
@@ -262,7 +289,10 @@ export class LeagueService {
         } else if (a.clubStats.totalPoint > b.clubStats.totalPoint) {
           return -1;
         } else {
-          return 0;
+          return a.clubStats.goals.goalDifference <
+            b.clubStats.goals.goalDifference
+            ? 1
+            : -1;
         }
       });
 
@@ -353,12 +383,18 @@ export class LeagueService {
     );
 
     if (homeClub && awayClub) {
-      const homeGoals = this.generateGoals(
-        homeClub.clubStats.performance.overallRating
-      );
-      const awayGoals = this.generateGoals(
-        awayClub.clubStats.performance.overallRating
-      );
+      const homeGoals = this.generateGoals({
+        def: homeClub.clubStats.performance.defenseRating,
+        mdi: homeClub.clubStats.performance.midfieldRating,
+        att: homeClub.clubStats.performance.attackRating,
+        ovr: homeClub.clubStats.performance.overallRating,
+      });
+      const awayGoals = this.generateGoals({
+        def: awayClub.clubStats.performance.defenseRating,
+        mdi: awayClub.clubStats.performance.midfieldRating,
+        att: awayClub.clubStats.performance.attackRating,
+        ovr: awayClub.clubStats.performance.overallRating,
+      });
 
       this.updateClubStat(homeClub, awayClub, homeGoals, awayGoals);
     }
