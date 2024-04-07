@@ -12,24 +12,28 @@
     >
       <ng-template pTemplate="header">
         <tr>
+          <th class="w-3rem"></th>
           <th></th>
-          <th>Club</th>
-          <th>Abbr</th>
-          <th>Played</th>
-          <th>Wins</th>
-          <th>Draws</th>
-          <th>Losses</th>
-          <th>Goals Scored</th>
-          <th>Goals Conceded</th>
-          <th>Goal Difference</th>
-          <th>Points</th>
+          <th class="w-7rem">Played</th>
+          <th class="w-7rem">Wins</th>
+          <th class="w-7rem">Draws</th>
+          <th class="w-7rem">Losses</th>
+          <th class="w-7rem">Goals Scored</th>
+          <th class="w-7rem">Goals Conceded</th>
+          <th class="w-7rem">Goal Difference</th>
+          <th class="w-7rem">Points</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-team>
-        <tr>
+        <tr
+          [ngClass]="{
+            'bg-gray-50': team.clubStats.leaguePosition % 2 === 0,
+            'bg-white': team.clubStats.leaguePosition % 2 !== 0,
+          }"
+          class="font-semibold text-xl"
+        >
           <td>{{ team.clubStats.leaguePosition }}</td>
           <td>{{ team.clubName }}</td>
-          <td>{{ team.abbr }}</td>
           <td>{{ team.clubStats.totalMatchesPlayed }}</td>
           <td>{{ team.clubStats.matchOutcome.winCount }}</td>
           <td>{{ team.clubStats.matchOutcome.drawCount }}</td>
