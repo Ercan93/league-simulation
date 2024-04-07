@@ -7,30 +7,12 @@
   <div class="row flex flex-wrap align-items-center justify-content-center">
     @for (week of [lastWeekFixture,currentWeekFixture,nextWeekFixture]; track
     $index) { @if (week.length){
-    <p-fieldset
-      class="col-12 lg:col-4"
-      [legend]="
-        $index === 0 ? 'Last Week' : $index === 1 ? 'Current Week' : 'Next Week'
-      "
-    >
-      @for (match of week; track $index) {
-      <div
-        class="row flex flex-wrap align-items-center justify-content-between my-3 py-1 border-y-2 border-gray-100 custom-primary-text-color"
-      >
-        <div class="col-12 sm:col-5 m-0 font-medium">{{ match.homeTeam }}</div>
-        <div class="col-12 sm:col-3">
-          <div
-            class="row d-flex flex-row align-items-center justify-content-center"
-          >
-            <span>{{ match.homeTeamScore }}</span>
-            <span class="font-medium">-</span>
-            <span>{{ match.awayTeamScore }}</span>
-          </div>
-        </div>
-        <div class="col-12 sm:col-4 m-0 font-medium">{{ match.awayTeam }}</div>
-      </div>
-      }
-    </p-fieldset>
+    <div class="col-12 lg:col-4">
+      <app-fixture-card
+        [fixture]="week"
+        [legend]="'Matchweek ' + ($index + 1)"
+      ></app-fixture-card>
+    </div>
     } } @empty {
     <p-fieldset legend="Fixture">
       <p class="m-0">No fixtures available</p>
