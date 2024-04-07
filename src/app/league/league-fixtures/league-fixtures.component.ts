@@ -3,7 +3,6 @@ import { map, toArray, switchMap } from 'rxjs/operators';
 import { Component } from '@angular/core';
 import { MatchFixture } from '../../../domain/club/matchFixture';
 import { LeagueService } from '../../../service/leagueservice';
-import { Season } from '../../../domain/season';
 
 @Component({
   selector: 'app-league-fixtures',
@@ -16,17 +15,21 @@ export class LeagueFixturesComponent {
   constructor(private leagueService: LeagueService) {}
 
   ngOnInit(): void {
-    this.getMatchweeks(this.leagueService.season$).subscribe(
+    this.getMatchweeks(this.leagueService.matchFixtures$).subscribe(
       (matchweeks) => (this.fixtures = matchweeks)
     );
   }
 
-  getMatchweeks(season$: Observable<Season>): Observable<MatchFixture[][]> {
-    return season$.pipe(
-      switchMap((season) =>
-        range(1, (season.clubs.length - 1) * 2).pipe(
-          map((i) =>
-            season.matchFixtures.filter((fixture) => fixture.matchweek === i)
+  getMatchweeks(
+    matchFixtures$: Observable<MatchFixture[]>
+  ): Observable<MatchFixture[][]> {
+    return matchFixtures$.pipe(
+      switchMap((matchFixtures) =>
+        range(1, matchFixtures.length / 3).pipe(
+          map((matchweek) =>
+            matchFixtures.filter(
+              (matchFixture) => matchFixture.matchweek === matchweek
+            )
           ),
           toArray()
         )
