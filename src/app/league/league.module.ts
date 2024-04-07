@@ -10,6 +10,7 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { FixtureCardComponent } from './components/fixture-card/fixture-card.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
     LeagueTableComponent,
     LeagueResultsComponent,
     LeagueActionsComponent,
+    FixtureCardComponent,
   ],
   imports: [
     CommonModule,
@@ -32,6 +34,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
     LeagueTableComponent,
     LeagueResultsComponent,
     LeagueActionsComponent,
+    FixtureCardComponent,
   ],
 })
 export class LeagueModule {}
