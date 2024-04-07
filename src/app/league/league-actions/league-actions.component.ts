@@ -7,7 +7,15 @@ import { LeagueService } from '../../../service/leagueservice';
   styleUrl: './league-actions.component.scss',
 })
 export class LeagueActionsComponent {
+  isSeasonOver: boolean = false;
+  percentage: number = 0;
+
   constructor(private leagueService: LeagueService) {}
+
+  ngOnInit(): void {
+    this.getMatchweek();
+    this.calculatePercentage();
+  }
 
   simulationWeek(): void {
     this.leagueService.simulateWeek();
@@ -17,7 +25,27 @@ export class LeagueActionsComponent {
     this.leagueService.simulateSeason();
   }
 
-  resetSeason(): void {
-    this.leagueService.resetSeason();
+  createNewSeason(): void {
+    this.leagueService.createNewSeason();
+  }
+
+  calculatePercentage(): void {
+    this.leagueService.matchWeek$.subscribe((week) => {
+      let currentWeek: number = week;
+      if (week < 10) currentWeek = week - 1;
+      else currentWeek = 10;
+
+      this.percentage = (currentWeek / 10) * 100;
+    });
+  }
+
+  getMatchweek(): void {
+    this.leagueService.matchWeek$.subscribe((week) => {
+      if (week > 9) {
+        this.isSeasonOver = true;
+      } else {
+        this.isSeasonOver = false;
+      }
+    });
   }
 }

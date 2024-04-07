@@ -1,7 +1,7 @@
 <div class="container bg-gray-100 border-bottom-2 border-gray-200">
   <div class="row flex flex-wrap">
     <div class="col-4">
-      <h1 class="title">Süper Lig</h1>
+      <h1 class="title custom-primary-text-color">Süper Lig</h1>
     </div>
     <div class="col-8 flex align-items-center justify-content-end">
       <p-button
@@ -10,6 +10,7 @@
         label="Simulate Matchweek"
         class="m-1"
         (click)="simulationWeek()"
+        [disabled]="isSeasonOver"
       ></p-button>
       <p-button
         [raised]="true"
@@ -17,14 +18,22 @@
         label="Simulate Season"
         class="m-1"
         (click)="simulationSeason()"
+        [disabled]="isSeasonOver"
       ></p-button>
       <p-button
         [raised]="true"
-        severity="danger"
-        label="Reset Season"
+        severity="success"
+        label="Create New Season"
         class="m-1"
-        (click)="resetSeason()"
+        (click)="createNewSeason()"
       ></p-button>
     </div>
+  </div>
+  <div>
+    <p-progressBar [value]="percentage" color="#37003c">
+      <ng-template pTemplate="content" let-value>
+        <span>{{ percentage }}/100</span>
+      </ng-template>
+    </p-progressBar>
   </div>
 </div>

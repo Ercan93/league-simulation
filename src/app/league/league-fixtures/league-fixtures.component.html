@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1 class="text-start">League Fixtures</h1>
+      <h1 class="text-start">Fixtures</h1>
     </div>
   </div>
   <div class="row flex flex-wrap align-items-center justify-content-center">
@@ -9,7 +9,7 @@
     <p-fieldset class="col-12 lg:col-4" legend="Matchweek {{ $index + 1 }}">
       @for (match of fixture; track $index) {
       <div
-        class="row flex flex-wrap align-items-center justify-content-between my-3 py-1 border-y-2 border-gray-100"
+        class="row flex flex-wrap align-items-center justify-content-between my-3 py-1 border-y-2 border-gray-100 custom-primary-text-color"
       >
         <div class="col-12 sm:col-5 m-0 font-medium">{{ match.homeTeam }}</div>
         <div class="col-12 sm:col-3">
