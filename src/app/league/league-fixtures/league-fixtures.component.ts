@@ -24,16 +24,26 @@ export class LeagueFixturesComponent {
     matchFixtures$: Observable<MatchFixture[]>
   ): Observable<MatchFixture[][]> {
     return matchFixtures$.pipe(
-      switchMap((matchFixtures) =>
-        range(1, matchFixtures.length / 3).pipe(
-          map((matchweek) =>
-            matchFixtures.filter(
-              (matchFixture) => matchFixture.matchweek === matchweek
-            )
-          ),
-          toArray()
-        )
-      )
+      switchMap((matchFixtures) => this.addMatchweeks(matchFixtures))
+    );
+  }
+
+  addMatchweeks(
+    matchFixtures: MatchFixture[]
+  ): Observable<MatchFixture[][]> {
+    const matchweekCount = matchFixtures.length / 3;
+    return range(1, matchweekCount).pipe(
+      map((matchweek) => this.getMatchweek(matchFixtures, matchweek)),
+      toArray()
+    );
+  }
+
+  getMatchweek(
+    matchFixtures: MatchFixture[],
+    matchweek: number
+  ): MatchFixture[] {
+    return matchFixtures.filter(
+      (matchFixture) => matchFixture.matchweek === matchweek
     );
   }
 }
