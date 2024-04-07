@@ -16,4 +16,8 @@ export class LeagueActionsComponent {
   simulationSeason(): void {
     this.leagueService.simulateSeason();
   }
+
+  resetSeason(): void {
+    this.leagueService.resetSeason();
+  }
 }

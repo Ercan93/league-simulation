@@ -391,4 +391,19 @@ export class LeagueService {
       this.simulateWeek();
     }
   }
+
+  resetSeason(): void {
+    this.setSeason({
+      id: 0,
+      seasonName: '',
+      startDate: '',
+      endDate: '',
+      leagueName: '',
+      matchFixtures: [],
+      clubs: [],
+    });
+    this.setMatchFixtures([]);
+    this.setMatchWeek(1);
+    this.createSeason('Super Lig', '2023-2024', 'Eylül 2023', 'Mayıs 2024');
+  }
 }
