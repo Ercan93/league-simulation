@@ -152,6 +152,7 @@ export class LeagueService {
         abbr: team.abbr,
         clubStats: {
           leaguePosition: index + 1,
+          championshipOdds: 0,
           totalPoint: 0,
           performance: {
             attackRating: team.attackRating,
@@ -371,6 +372,41 @@ export class LeagueService {
     }
   }
 
+  calculateChampionshipOdds(): void {
+    const clubs = this.seasonSubject.value?.clubs;
+    const leaderPoint = clubs[0].clubStats.totalPoint;
+    const week = this.matchWeekSubject.value;
+    let totalPoint = 0;
+
+    if (!clubs || week === 11) return;
+
+    totalPoint = clubs.reduce(
+      (acc, club) => acc + club.clubStats.totalPoint,
+      0
+    );
+
+    clubs.forEach((club) => {
+      const pointDifference = leaderPoint - club.clubStats.totalPoint;
+      if (pointDifference > (10 - week) * 3) {
+        club.clubStats.championshipOdds = 0;
+        totalPoint -= club.clubStats.totalPoint;
+      } else {
+        club.clubStats.championshipOdds = 1;
+      }
+    });
+
+    clubs.forEach((club) => {
+      if (club.clubStats.championshipOdds !== 0) {
+        let championshipOdd = Math.round(
+          (100 / totalPoint) * club.clubStats.totalPoint
+        );
+        club.clubStats.championshipOdds = championshipOdd;
+      }
+    });
+
+    this.setClubs(clubs);
+  }
+
   simulateMatch(fixture: MatchFixture): void {
     const homeTeam = fixture.homeTeam;
     const awayTeam = fixture.awayTeam;
@@ -414,6 +450,7 @@ export class LeagueService {
       });
       if (week <= totalWeeks) this.setMatchWeek(week + 1);
     }
+    this.calculateChampionshipOdds();
   }
 
   simulateSeason(): void {

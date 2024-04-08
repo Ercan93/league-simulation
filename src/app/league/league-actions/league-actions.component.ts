@@ -32,7 +32,7 @@ export class LeagueActionsComponent {
   calculatePercentage(): void {
     this.leagueService.matchWeek$.subscribe((week) => {
       let currentWeek: number = week;
-      if (week < 10) currentWeek = week - 1;
+      if (week < 11) currentWeek = week - 1;
       else currentWeek = 10;
 
       this.percentage = (currentWeek / 10) * 100;
@@ -41,7 +41,7 @@ export class LeagueActionsComponent {
 
   getMatchweek(): void {
     this.leagueService.matchWeek$.subscribe((week) => {
-      if (week > 9) {
+      if (week > 10) {
         this.isSeasonOver = true;
       } else {
         this.isSeasonOver = false;

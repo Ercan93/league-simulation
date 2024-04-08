@@ -23,5 +23,6 @@ export interface ClubStats {
   performance: TeamPerformance;
   goals: GoalStats;
   totalMatchesPlayed: number;
+  championshipOdds: number;
   matchOutcome: MatchOutcome;
 }

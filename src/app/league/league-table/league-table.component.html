@@ -22,6 +22,7 @@
           <th class="w-7rem">Goals Conceded</th>
           <th class="w-7rem">Goal Difference</th>
           <th class="w-7rem">Points</th>
+          <th class="w-7rem">Championship Odds</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-team>
@@ -60,6 +61,7 @@
           <td>{{ team.clubStats.goals.goalsConceded }}</td>
           <td>{{ team.clubStats.goals.goalDifference }}</td>
           <td>{{ team.clubStats.totalPoint }}</td>
+          <td>{{ team.clubStats.championshipOdds }}</td>
         </tr>
       </ng-template>
     </p-table>
