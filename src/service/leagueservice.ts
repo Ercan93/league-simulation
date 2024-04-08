@@ -1,7 +1,7 @@
 import { Season } from './../domain/season';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { Club } from '../domain/club/club';
 import { MatchFixture } from '../domain/club/matchFixture';
 
@@ -300,17 +300,22 @@ export class LeagueService {
   }
 
   updateMatchFixture(fixture: MatchFixture): void {
-    const matchFixtures = this.seasonSubject.value?.matchFixtures;
-    if (matchFixtures) {
-      const index = matchFixtures.findIndex(
-        (f) =>
-          f.homeTeam === fixture.homeTeam &&
-          f.awayTeam === fixture.awayTeam &&
-          f.matchweek === fixture.matchweek
-      );
-      matchFixtures[index] = fixture;
-      this.matchFixturesSubject.next(matchFixtures);
-    }
+    this.seasonSubject
+      .pipe(
+        map((season) => season?.matchFixtures),
+        tap((matchFixtures) => {
+          if (!matchFixtures) return;
+          const index = matchFixtures.findIndex(
+            (f) =>
+              f.homeTeam === fixture.homeTeam &&
+              f.awayTeam === fixture.awayTeam &&
+              f.matchweek === fixture.matchweek
+          );
+          matchFixtures[index] = fixture;
+          this.matchFixturesSubject.next(matchFixtures);
+        })
+      )
+      .subscribe();
   }
 
   updateStatsForMatch(
