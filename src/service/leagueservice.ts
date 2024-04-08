@@ -395,7 +395,15 @@ export class LeagueService {
     const week = this.matchWeekSubject.value;
     let totalPoint = 0;
 
-    if (!clubs || week > 10) return;
+    if (!clubs) return;
+
+    if (week > 10) {
+      clubs.forEach((club, index) => {
+        if (index === 0) club.clubStats.championshipOdds = 100;
+        else club.clubStats.championshipOdds = 0;
+      });
+      return;
+    }
 
     totalPoint = clubs.reduce(
       (acc, club) => acc + club.clubStats.totalPoint,
