@@ -355,19 +355,31 @@ export class LeagueService {
       club.clubStats.goals.goalsScored - club.clubStats.goals.goalsConceded;
   }
 
+  updateWin(club: Club): void {
+    club.clubStats.totalPoint += 3;
+    club.clubStats.matchOutcome.winCount++;
+  }
+
+  updateLoss(club: Club): void {
+    club.clubStats.matchOutcome.lossCount++;
+  }
+
+  updateDraw(club: Club): void {
+    club.clubStats.totalPoint += 1;
+    club.clubStats.matchOutcome.drawCount++;
+  }
+
   updateMatchOutcome(
     club: Club,
     goalsScored: number,
     goalsConceded: number
   ): void {
     if (goalsScored > goalsConceded) {
-      club.clubStats.totalPoint += 3;
-      club.clubStats.matchOutcome.winCount++;
+      this.updateWin(club);
     } else if (goalsScored < goalsConceded) {
-      club.clubStats.matchOutcome.lossCount++;
+      this.updateLoss(club);
     } else {
-      club.clubStats.totalPoint += 1;
-      club.clubStats.matchOutcome.drawCount++;
+      this.updateDraw(club);
     }
   }
 
