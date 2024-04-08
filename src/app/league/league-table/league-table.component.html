@@ -63,11 +63,14 @@
           <td>{{ team.clubStats.totalPoint }}</td>
           <td
             [ngClass]="{
-              'bg-green-200': team.clubStats.championshipOdds >= 50,
+              'bg-green-200': team.clubStats.championshipOdds >= 45,
               'bg-teal-200':
                 team.clubStats.championshipOdds >= 20 &&
-                team.clubStats.championshipOdds < 50,
-              'bg-red-100': team.clubStats.championshipOdds === 0
+                team.clubStats.championshipOdds < 45,
+              'bg-yellow-200':
+                team.clubStats.championshipOdds > 0 &&
+                team.clubStats.championshipOdds < 20,
+              'bg-red-200': team.clubStats.championshipOdds === 0
             }"
           >
             {{ team.clubStats.championshipOdds }}
