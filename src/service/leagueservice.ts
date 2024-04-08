@@ -120,15 +120,8 @@ export class LeagueService {
     });
   }
 
-  getClubById(id: number): Observable<Club> {
-    return new Observable((observer) => {
-      const clubs = this.seasonSubject.value?.clubs;
-      if (clubs) {
-        const club = clubs.find((c) => c.id === id);
-        observer.next(club);
-        observer.complete();
-      }
-    });
+  getClubByName(clubName: string): Club | undefined {
+    return this.seasonSubject.value?.clubs.find((c) => c.clubName === clubName);
   }
 
   updateClubStats(club: Club): void {
@@ -257,15 +250,15 @@ export class LeagueService {
   }
 
   generateGoals({
-    def,
-    mdi,
-    att,
-    ovr,
+    attackRating: att,
+    defenseRating: def,
+    midfieldRating: mdi,
+    overallRating: ovr,
   }: {
-    def: number;
-    mdi: number;
-    att: number;
-    ovr: number;
+    defenseRating: number;
+    midfieldRating: number;
+    attackRating: number;
+    overallRating: number;
   }): number {
     const formule = def * 0.2 + mdi * 0.3 + att * 0.3 + ovr * 0.2;
     let goals = Math.floor(Math.random() * formule);
@@ -319,6 +312,17 @@ export class LeagueService {
     }
   }
 
+  updateStatsForMatch(
+    club: Club,
+    goalsFor: number,
+    goalsAgainst: number
+  ): void {
+    this.updateMatchStats(club, goalsFor, goalsAgainst);
+    this.updateMatchOutcome(club, goalsFor, goalsAgainst);
+    this.updateClubStats(club);
+    this.updatePostions();
+  }
+
   updateClubStat(
     homeClub: Club,
     awayClub: Club,
@@ -326,15 +330,10 @@ export class LeagueService {
     awayGoals: number
   ): void {
     const week = this.matchWeekSubject.value;
-    this.updateMatchStats(homeClub, homeGoals, awayGoals);
-    this.updateMatchStats(awayClub, awayGoals, homeGoals);
 
-    this.updateMatchOutcome(homeClub, homeGoals, awayGoals);
-    this.updateMatchOutcome(awayClub, awayGoals, homeGoals);
+    this.updateStatsForMatch(homeClub, homeGoals, awayGoals);
+    this.updateStatsForMatch(awayClub, awayGoals, homeGoals);
 
-    this.updateClubStats(homeClub);
-    this.updateClubStats(awayClub);
-    this.updatePostions();
     this.updateMatchFixture({
       homeTeam: homeClub.clubName,
       awayTeam: awayClub.clubName,
@@ -408,29 +407,12 @@ export class LeagueService {
   }
 
   simulateMatch(fixture: MatchFixture): void {
-    const homeTeam = fixture.homeTeam;
-    const awayTeam = fixture.awayTeam;
-
-    const homeClub = this.seasonSubject.value?.clubs.find(
-      (c) => c.clubName === homeTeam
-    );
-    const awayClub = this.seasonSubject.value?.clubs.find(
-      (c) => c.clubName === awayTeam
-    );
+    const homeClub = this.getClubByName(fixture.homeTeam);
+    const awayClub = this.getClubByName(fixture.awayTeam);
 
     if (homeClub && awayClub) {
-      const homeGoals = this.generateGoals({
-        def: homeClub.clubStats.performance.defenseRating,
-        mdi: homeClub.clubStats.performance.midfieldRating,
-        att: homeClub.clubStats.performance.attackRating,
-        ovr: homeClub.clubStats.performance.overallRating,
-      });
-      const awayGoals = this.generateGoals({
-        def: awayClub.clubStats.performance.defenseRating,
-        mdi: awayClub.clubStats.performance.midfieldRating,
-        att: awayClub.clubStats.performance.attackRating,
-        ovr: awayClub.clubStats.performance.overallRating,
-      });
+      const homeGoals = this.generateGoals(homeClub.clubStats.performance);
+      const awayGoals = this.generateGoals(awayClub.clubStats.performance);
 
       this.updateClubStat(homeClub, awayClub, homeGoals, awayGoals);
     }
