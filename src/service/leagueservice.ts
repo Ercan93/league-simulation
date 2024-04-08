@@ -1,6 +1,7 @@
 import { Season } from './../domain/season';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, from } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import { Club } from '../domain/club/club';
 import { MatchFixture } from '../domain/club/matchFixture';
 
@@ -389,7 +390,7 @@ export class LeagueService {
     const week = this.matchWeekSubject.value;
     let totalPoint = 0;
 
-    if (!clubs || week === 11) return;
+    if (!clubs || week > 10) return;
 
     totalPoint = clubs.reduce(
       (acc, club) => acc + club.clubStats.totalPoint,
@@ -437,13 +438,15 @@ export class LeagueService {
 
     if (week > totalWeeks) return;
 
-    if (matchFixtures) {
-      const fixtures = matchFixtures.filter((f) => f.matchweek === week);
-      fixtures.forEach((fixture) => {
-        this.simulateMatch(fixture);
-      });
-      if (week <= totalWeeks) this.setMatchWeek(week + 1);
-    }
+    from(matchFixtures)
+      .pipe(
+        filter((fixture) => fixture.matchweek === week),
+        tap((fixture) => this.simulateMatch(fixture))
+      )
+      .subscribe();
+
+    if (week <= totalWeeks) this.setMatchWeek(week + 1);
+
     this.calculateChampionshipOdds();
   }
 
